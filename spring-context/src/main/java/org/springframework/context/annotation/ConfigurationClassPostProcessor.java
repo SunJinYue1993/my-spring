@@ -276,10 +276,13 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 	/**
 	 * Build and validate a configuration model based on the registry of
+	 * 根据BeanDefinitionRegistry构建并验证配置模型;
 	 * {@link Configuration} classes.
 	 */
 	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<>();
+		 // 获取所有BeanDefinition,包括spring自带的BeanDefinition{internalConfigurationAnnotationProcessor;internalEventListenerFactory
+		 //					internalEventListenerProcessor;internalAutowiredAnnotationProcessor} 和 加@Configuration注解的
 		String[] candidateNames = registry.getBeanDefinitionNames();
 
 		for (String beanName : candidateNames) {
@@ -290,7 +293,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				}
 			}
 			else if (ConfigurationClassUtils.checkConfigurationClassCandidate(beanDef, this.metadataReaderFactory)) {
-				configCandidates.add(new BeanDefinitionHolder(beanDef, beanName));
+				configCandidates.add(new BeanDefinitionHolder(beanDef, beanName)); //将不是Spring自带的BeanDefinition加入这个list, 下面的parse方法将构建这个配置
 			}
 		}
 
@@ -333,7 +336,9 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
 			StartupStep processConfig = this.applicationStartup.start("spring.context.config-classes.parse");
+			// TODO: 构建这个配置类, 处理我们配置类，也就是加了@Configuration注解的处理类
 			parser.parse(candidates);
+			// TODO: 验证
 			parser.validate();
 
 			Set<ConfigurationClass> configClasses = new LinkedHashSet<>(parser.getConfigurationClasses());

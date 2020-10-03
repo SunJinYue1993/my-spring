@@ -1,0 +1,91 @@
+## 配置的Bean如何放入到IOC中
+### 算法与数据结构
+#### 1. AbstractApplicationContext
+```java
+	// 调用上下文中 注册为bean的工厂处理器(例如: MyBeanFactoryPostProcessor, ConfigurationClassPostProcessor)
+	invokeBeanFactoryPostProcessors(beanFactory);  ->跳入
+```
+#### 2. PostProcessorRegistrationDelegate
+代理所有的BeanDefinitionRegistry
+```java
+	// 框架需要优先处理的BeanDefinition(bean定义)
+	String[] postProcessorNames = beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
+	
+	// 当执行完这个方法，扫描(ComponentScan)的类加入BeanDefinitionMap中
+	// 参数：1.配置类处理器ConfigurationClassPostProcessor 2.spring默认工厂DefaultListableBeanFactory 3.spring应用启动标识
+	invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry, beanFactory.getApplicationStartup());  ->跳入
+	
+	...
+
+```
+#### 3. ConfigurationClassPostProcessor
+处理我们配置类，也就是加了@Configuration注解的处理类
+```java
+	// 根据BeanDefinitionRegistry构建并验证配置模型
+	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
+		// 获取所有BeanDefinition,包括spring自带的{
+							internalConfigurationAnnotationProcessor;internalEventListenerFactory
+							internalEventListenerProcessor;internalAutowiredAnnotationProcessor}和加@Configuration注解的
+		String[] candidateNames = registry.getBeanDefinitionNames();
+		if() {
+			log.debug(这几个是spring自带的Bean definition)
+		} else {
+			candidates.add(Bean definition) //将不是Spring自带的BeanDefinition加入这个list, 下面的parse方法将构建这个配置
+		}
+		// 构建 参数：BeanDefinitionHolder{BeanDefinition beanDefinition，String beanName，String[] aliases}
+		parser.parse(candidates);
+		// 校验
+		parser.validate();
+	
+	}
+```
+
+#### 4. ConfigurationClassParser
+专门处理配置类的核心类
+```java
+	// 递归处理所有的配置类; 参数: 1.配置类configClass 2.将所有配置类统一成wrapper：sourceClass 3.拦截器
+	do {
+		sourceClass = doProcessConfigurationClass(configClass, sourceClass, filter);
+	}
+	while (sourceClass != null);
+	// 放入map中
+	this.configurationClasses.put(configClass, configClass);
+```
+最核心的来了！！
+```java
+	protected final SourceClass doProcessConfigurationClass(ConfigurationClass configClass, SourceClass sourceClass, Predicate<String> filter) {
+		// TODO：Process any @ComponentScan annotations
+		// 配置类用@ComponentScan ->注释，立即执行扫描 -> 调到
+		Set<BeanDefinitionHolder> scannedBeanDefinitions = this.componentScanParser.parse(componentScan, sourceClass.getMetadat().getClassName()); 
+		// TODO：Process any @Import annotations
+		// TODO：Process any @ImportResource annotations
+		// TODO：Process individual @Bean methods
+	}
+```
+#### 5. ComponentScanAnnotationParser
+解析@ComponentScan注解的值
+```java
+	// 注册中心,向注册中心新增一个bean定义
+	ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(this.registry, componentScan.getBoolean("useDefaultFilters"), this.environment, this.resourceLoader);
+	scanner.doScan(StringUtils.toStringArray(basePackages));
+```
+#### 6. ClassPathBeanDefinitionScanner
+```java
+	protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
+		// TODO:注册bean定义
+		registerBeanDefinition(definitionHolder, this.registry);
+	}
+```
+
+此时扫描到的BeanDefinition已经构建了！
+总结: 
+
+@Component要加入容器的方式:
+1. ac.register(@Component修饰的类);直接注册生成AnnotatedGenericBeanDefinition
+2. ac.register(@ComponentScan修饰的类);由ConfigurationClassParser处理
+3. ac.register(@Configuration修饰的类);在这个类上+@ComponentScan也会被ConfigurationClassParser解析到
+ConfigurationClassParser主要工作有以下几点:
+	// TODO：Process any @ComponentScan annotations
+	// TODO：Process any @Import annotations
+    // TODO：Process any @ImportResource annotations
+	// TODO：Process individual @Bean methods

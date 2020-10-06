@@ -127,6 +127,7 @@ public class InjectionMetadata {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Processing injected element of bean '" + beanName + "': " + element);
 				}
+				// TODO:jdk动态代理, 填充属性时注入AClass, 没有则去Get AClass -> getSingleton("AClass");
 				element.inject(target, beanName, pvs);
 			}
 		}

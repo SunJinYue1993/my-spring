@@ -119,7 +119,7 @@ public class XmlWebApplicationContext extends AbstractRefreshableWebApplicationC
 	 * @see #getResourcePatternResolver
 	 */
 	protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws IOException {
-		String[] configLocations = getConfigLocations();
+		String[] configLocations = getConfigLocations();  // 与setConfigLocations()呼应,在初始化上下文类时,有调用getConfigLocations(factory)方法
 		if (configLocations != null) {
 			for (String configLocation : configLocations) {
 				reader.loadBeanDefinitions(configLocation);

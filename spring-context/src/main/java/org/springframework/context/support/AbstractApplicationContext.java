@@ -551,14 +551,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		synchronized (this.startupShutdownMonitor) {
 			StartupStep contextRefresh = this.applicationStartup.start("spring.context.refresh");
 
-			// Prepare this context for refreshing.
+			// 1. Prepare this context for refreshing. -- 为刷新这个上下文做准备; 点进去看一下, 里面结构很清晰, 有注释
 			prepareRefresh();
 
-			// Tell the subclass to refresh the internal bean factory.
-			// 默认返回DefaultListableBeanFactory
+			// 2. Tell the subclass to refresh the internal bean factory.  -- 告诉子类刷新内部bean factory
+			// 创建DefaultListableBeanFactory, 用的最多的bean factory; 加载xml配置文件或annotation配置到当前bean factory 也就是BeanDefinition
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
-			// Prepare the bean factory for use in this context.
+			// 3. Prepare the bean factory for use in this context.   -- 设置bean factory
 			prepareBeanFactory(beanFactory);
 
 			try {
@@ -624,11 +624,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * active flag as well as performing any initialization of property sources.
 	 */
 	protected void prepareRefresh() {
-		// Switch to active.
+		// 1. Switch to active.  --设置时间和系统当前标记
 		this.startupDate = System.currentTimeMillis();
 		this.closed.set(false);
 		this.active.set(true);
 
+		// 2. 打印日志
 		if (logger.isDebugEnabled()) {
 			if (logger.isTraceEnabled()) {
 				logger.trace("Refreshing " + this);
@@ -638,19 +639,22 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			}
 		}
 
-		// Initialize any placeholder property sources in the context environment.
+		// 3. Initialize any placeholder property sources in the context environment.  --在这个上下文环境初始化占位符属性来源;
+		// 空方法, 子类进行扩展, 比如初始化Web环境: org.springframework.web.context.support.StaticWebApplicationContext
 		initPropertySources();
 
-		// Validate that all properties marked as required are resolvable:
+		// 4. Validate that all properties marked as required are resolvable:  验证环境需要的所有属性
 		// see ConfigurablePropertyResolver#setRequiredProperties
+		// --获得Environment对象, 设置系统环境属性到Environment对象中(不是application.properties) -> 集合.add(属性) -> 遍历校验,不合法抛异常
 		getEnvironment().validateRequiredProperties();
 
-		// Store pre-refresh ApplicationListeners...
+		// 5. Store pre-refresh ApplicationListeners...     -- 为了扩展: 储存预刷新的监听器, 比如springboot的13个自带的监听器!
+		// 设置监听器和事件集合
 		if (this.earlyApplicationListeners == null) {
 			this.earlyApplicationListeners = new LinkedHashSet<>(this.applicationListeners);
 		}
 		else {
-			// Reset local application listeners to pre-refresh state.
+			// Reset local application listeners to pre-refresh state. 重启加载监听器
 			this.applicationListeners.clear();
 			this.applicationListeners.addAll(this.earlyApplicationListeners);
 		}
@@ -676,7 +680,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #getBeanFactory()
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
-		refreshBeanFactory();
+		refreshBeanFactory();//刷新bean factory
 		return getBeanFactory();
 	}
 

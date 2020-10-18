@@ -562,35 +562,33 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			prepareBeanFactory(beanFactory);
 
 			try {
-				// Allows post-processing of the bean factory in context subclasses.
+				// 4. Allows post-processing of the bean factory in context subclasses. -- 允许在上下文bean的后处理工厂子类
 				postProcessBeanFactory(beanFactory);
 
 				StartupStep beanPostProcess = this.applicationStartup.start("spring.context.beans.post-process");
-				// Invoke factory processors registered as beans in the context.
-				// 调用上下文中注册的工厂处理器Bean(例如: MyBeanFactoryPostProcessor, ConfigurationClassPostProcessor)
+				// 5. Invoke factory processors registered as beans in the context. --按给定顺序( 如:@Order(1) )实例化并调用所有的BeanFactoryPostProcessor; (例如: MyBeanFactoryPostProcessor, XxxBeanFactoryPostProcessor)
 				invokeBeanFactoryPostProcessors(beanFactory);
 
-				// Register bean processors that intercept bean creation.
+				// 6. Register bean processors that intercept bean creation. -- 按给定顺序实例化并注册所有注册的所有的BeanPostProcessor
 				registerBeanPostProcessors(beanFactory);
 				beanPostProcess.end();
 
-				// Initialize message source for this context.
+				// 7. Initialize message source for this context.  -- 国际化, 基本用不到
 				initMessageSource();
 
-				// Initialize event multicaster for this context.
+				// 8. Initialize event multicaster for this context. -- 初始化事件广播器
 				initApplicationEventMulticaster();
 
-				// Initialize other special beans in specific context subclasses.
+				// 9. Initialize other special beans in specific context subclasses.  --空方法,子类扩展
 				onRefresh();
 
-				// Check for listener beans and register them.
+				// 10. Check for listener beans and register them.  -- 检查监听器bean并注册它们
 				registerListeners();
 
-				// Instantiate all remaining (non-lazy-init) singletons.
-				// 实例化所有非lazy的单例的  类 ; Bean的生命周期都在这个方法里
+				// 11. ☆Instantiate all remaining (non-lazy-init) singletons.  -- 实例化所有非lazy的单例的  类 ; Bean的生命周期都在这个方法里
 				finishBeanFactoryInitialization(beanFactory);
 
-				// Last step: publish corresponding event.
+				// 12. Last step: publish corresponding event.  -- 最后一步:发布相应的事件
 				finishRefresh();
 			}
 
@@ -753,6 +751,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Instantiate and invoke all registered BeanFactoryPostProcessor beans,
 	 * respecting explicit order if given.
 	 * <p>Must be called before singleton instantiation.
+	 * TODO: 按给定顺序( 如:@Order(1) )实例化并调用所有的BeanFactoryPostProcessor; 必须在单例实例化之前调用
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
@@ -769,6 +768,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Instantiate and register all BeanPostProcessor beans,
 	 * respecting explicit order if given.
 	 * <p>Must be called before any instantiation of application beans.
+	 * TODO: 按给定顺序实例化并注册所有注册的所有的BeanPostProcessor; 必须在任何spring bean实例化之前调用
 	 */
 	protected void registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory) {
 		PostProcessorRegistrationDelegate.registerBeanPostProcessors(beanFactory, this);
@@ -912,6 +912,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Register a default embedded value resolver if no bean post-processor
 		// (such as a PropertyPlaceholderConfigurer bean) registered any before:
 		// at this point, primarily for resolution in annotation attribute values.
+		// 注册一个默认的嵌入式值解析器,如果没有bean post-processor(例如PropertyPlaceholderConfigurer,处理${}的类)
 		if (!beanFactory.hasEmbeddedValueResolver()) {
 			beanFactory.addEmbeddedValueResolver(strVal -> getEnvironment().resolvePlaceholders(strVal));
 		}
@@ -928,8 +929,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Allow for caching all bean definition metadata, not expecting further changes.
 		beanFactory.freezeConfiguration();
 
-		// Instantiate all remaining (non-lazy-init) singletons.
-		// 实例化所有剩余的单例Bean(non-lazy)
+		// ☆Instantiate all remaining (non-lazy-init) singletons. -- 实例化所有剩余的单例Bean(non-lazy)
 		beanFactory.preInstantiateSingletons();
 	}
 

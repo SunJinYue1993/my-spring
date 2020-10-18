@@ -84,7 +84,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 					}
 				}
 			}
-			return BeanUtils.instantiateClass(constructorToUse);
+			return BeanUtils.instantiateClass(constructorToUse);  // TODO: 通过过滤的构造器反射实例化对象
 		}
 		else {
 			// Must generate CGLIB subclass.

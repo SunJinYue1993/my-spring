@@ -489,6 +489,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see org.springframework.core.io.support.PathMatchingResourcePatternResolver
 	 */
 	protected ResourcePatternResolver getResourcePatternResolver() {
+		// 创建资源解析器,其实就是解析xml配置文件的
 		return new PathMatchingResourcePatternResolver(this);
 	}
 
@@ -551,11 +552,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		synchronized (this.startupShutdownMonitor) {
 			StartupStep contextRefresh = this.applicationStartup.start("spring.context.refresh");
 
-			// 1. Prepare this context for refreshing. -- 为刷新这个上下文做准备; 点进去看一下, 里面结构很清晰, 有注释
+			// 1. Prepare this context for refreshing.
+			// 前戏(这词用得好): 为容器刷新前的准备工作: 6 个步骤, 里面有注释
 			prepareRefresh();
 
-			// 2. Tell the subclass to refresh the internal bean factory.  -- 告诉子类刷新内部bean factory
-			// 创建DefaultListableBeanFactory, 用的最多的bean factory; 加载xml配置文件或annotation配置到当前bean factory 也就是BeanDefinition
+			// 2. Tell the subclass to refresh the internal bean factory.  翻译: 告诉子类刷新内部bean factory
+			// 创建容器对象：DefaultListableBeanFactory
+			// 加载xml配置文件的属性值到当前工厂中，最重要的就是BeanDefinition
+			// TODO: annotation配置属性不在这里!, 详情看day02
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// 3. Prepare the bean factory for use in this context.   -- 设置bean factory
@@ -623,7 +627,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * active flag as well as performing any initialization of property sources.
 	 */
 	protected void prepareRefresh() {
-		// 1. Switch to active.  --设置时间和系统当前标记
+		// 1. Switch to active.
+		// 设置时间和系统当前标记
 		this.startupDate = System.currentTimeMillis();
 		this.closed.set(false);
 		this.active.set(true);
@@ -639,27 +644,30 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// 3. Initialize any placeholder property sources in the context environment.  --在这个上下文环境初始化占位符属性来源;
-		// 空方法, 子类进行扩展, 比如初始化Web环境: org.springframework.web.context.support.StaticWebApplicationContext
+		// 子类进行扩展(空方法), 初始化属性资源, 比如初始化Web环境: org.springframework.web.context.support.StaticWebApplicationContext
+		// WebApplicationContextUtils.initServletPropertySources(getEnvironment().getPropertySources(),this.servletContext, this.servletConfig);
 		initPropertySources();
 
 		// 4. Validate that all properties marked as required are resolvable:  验证环境需要的所有属性
 		// see ConfigurablePropertyResolver#setRequiredProperties
-		// --获得Environment对象, 设置系统环境属性到Environment对象中(不是application.properties) -> 集合.add(属性) -> 遍历校验,不合法抛异常
+		// 创建并获取环境对象，验证需要的属性文件是否都已经放入环境中; 设置系统环境属性到Environment对象中(不是application.properties) -> 集合.add(属性) -> 遍历校验,不合法抛异常
 		getEnvironment().validateRequiredProperties();
 
 		// 5. Store pre-refresh ApplicationListeners...     -- 为了扩展: 储存预刷新的监听器, 比如springboot的13个自带的监听器!
-		// 设置监听器和事件集合
+		// 判断刷新前的应用程序监听器集合是否为空，如果为空，则将监听器添加到此集合中
 		if (this.earlyApplicationListeners == null) {
 			this.earlyApplicationListeners = new LinkedHashSet<>(this.applicationListeners);
 		}
 		else {
-			// Reset local application listeners to pre-refresh state. 重启加载监听器
+			// Reset local application listeners to pre-refresh state.
+			// 如果不等于空，则清空集合元素对象
 			this.applicationListeners.clear();
 			this.applicationListeners.addAll(this.earlyApplicationListeners);
 		}
 
-		// Allow for the collection of early ApplicationEvents,
+		// 6. Allow for the collection of early ApplicationEvents,
 		// to be published once the multicaster is available...
+		// 创建刷新前的需要监听的Event集合
 		this.earlyApplicationEvents = new LinkedHashSet<>();
 	}
 
@@ -679,7 +687,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #getBeanFactory()
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
-		refreshBeanFactory();//刷新bean factory
+		// 初始化BeanFactory,并进行XML文件读取，并将得到的BeanFactory记录在当前实体的属性中
+		// ☆1. ClassPathXMLApplicationContext走AbstractRefreshableApplicationContext实现的refreshBeanFactory()
+		// ☆2. AnnotationConfigApplicationContext走GenericApplicationContext实现的refreshBeanFactory()
+		refreshBeanFactory();
+		// 返回当前实体的beanFactory属性
 		return getBeanFactory();
 	}
 

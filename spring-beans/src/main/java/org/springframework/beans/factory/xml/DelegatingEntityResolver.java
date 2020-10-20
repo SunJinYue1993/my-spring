@@ -59,7 +59,9 @@ public class DelegatingEntityResolver implements EntityResolver {
 	 * (can be {@code null}) to use the default ClassLoader)
 	 */
 	public DelegatingEntityResolver(@Nullable ClassLoader classLoader) {
+		// DTD结构解析器
 		this.dtdResolver = new BeansDtdResolver();
+		// XSD结构解析器, 发现加载了schemaMappings,因为PluggableSchemaResolver.toString()调用了getSchemaMappings()进行初始化了,我想起一年前一个toString没重写看日志没把我看死
 		this.schemaResolver = new PluggableSchemaResolver(classLoader);
 	}
 

@@ -132,7 +132,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			// 定制beanFactory，设置两个属性，包括是否允许覆盖同名称的不同定义的对象以及循环依赖
 			customizeBeanFactory(beanFactory);
 			// 初始化documentReader,并进行XML文件读取及解析,默认命名空间的解析，自定义标签的解析, 观察出行BeanDefinitionNames和BeanDefinitionMap属性值变化
-			loadBeanDefinitions(beanFactory); //spring.schemas -> xml的外部引用
+			loadBeanDefinitions(beanFactory); // META-INF/spring.schemas -> xml的外部引用 -> xsd结构
 			this.beanFactory = beanFactory;
 		}
 		catch (IOException ex) {

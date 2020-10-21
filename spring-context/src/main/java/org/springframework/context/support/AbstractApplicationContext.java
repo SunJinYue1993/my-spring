@@ -249,6 +249,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Create a new AbstractApplicationContext with no parent.
 	 */
 	public AbstractApplicationContext() {
+		// 获得资源解析器,其实就是解析xml配置文件的
 		this.resourcePatternResolver = getResourcePatternResolver();
 	}
 
@@ -558,8 +559,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			// 2. Tell the subclass to refresh the internal bean factory.  翻译: 告诉子类刷新内部bean factory
 			// 创建容器对象：DefaultListableBeanFactory
-			// 加载xml配置文件的属性值到当前工厂中，最重要的就是BeanDefinition
-			// TODO: annotation配置属性不在这里!, 详情看day02
+			// 加载xml配置文件的属性值到当前工厂中，最重要的就是BeanDefinition得生成
+			// TODO: 基于annotation开发，配置属性不在这里!, 详情看day02和day05，BeanDefinition是register()的reader和scanner完成的
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// 3. Prepare the bean factory for use in this context.   -- 设置bean factory

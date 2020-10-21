@@ -27,3 +27,28 @@
 
   3. AnnotationConfigApplicationContext`通过ac.register()进行注册封装成BeanDefinition`
 
+#### 3. 注解驱动和xml配置BeanDefinition生成的时机?
+
+待补充: 简而言之 
+1. 注解驱动
+注解时注册完成后就封装成了BeanDefinition,new AnnotationConfigApplicationContext().register(HteEntity.class);
+两个核心的解析类
+public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry {
+	// 通过注解注册 -> BeanDefinition
+	private final AnnotatedBeanDefinitionReader reader;
+	// 通过扫描包批量注册 -> BeanDefinition
+	private final ClassPathBeanDefinitionScanner scanner;
+	
+	registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());//注册完成
+}
+
+2. xml配置
+new ClassPathXmlApplicationContext("applicationContext.xml"); ->> refresh();方法
+
+refresh(){
+    obtainFreshBeanFactory().refreshBeanFactory().loadBeanDefinitions(beanFactory).loadBeanDefinitions(beanDefinitionReader).....
+    
+    解析资源成 Document 对象, Document -> 用Document写逻辑来封装成 BeanDefinition -> BeanDefinitionHolder -> put BeanDefinitionMap中
+    
+    结束....
+}

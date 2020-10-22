@@ -146,7 +146,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		}
 
 		preProcessXml(root); // spring web可以扩展 前置
-		parseBeanDefinitions(root, this.delegate);  //参数: 根节点, 解析器
+		parseBeanDefinitions(root, this.delegate);  // ☆ 参数: 根节点, 解析器
 		postProcessXml(root); // spring web可以扩展 后置
 
 		this.delegate = parent;
@@ -173,10 +173,10 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				if (node instanceof Element) {
 					Element ele = (Element) node;
 					if (delegate.isDefaultNamespace(ele)) {
-						parseDefaultElement(ele, delegate);// 解析默认命名空间,比如beans,bean标签
+						parseDefaultElement(ele, delegate);// 解析spring的命名空间,比如beans,bean标签
 					}
 					else {
-						delegate.parseCustomElement(ele);// 解析其他命名空间标签,比如
+						delegate.parseCustomElement(ele);// ☆解析其他命名空间标签,比如我们可以扩展自己定义的标签
 					}
 				}
 			}

@@ -65,6 +65,7 @@ public abstract class AbstractSingleBeanDefinitionParser extends AbstractBeanDef
 		if (parentName != null) {
 			builder.getRawBeanDefinition().setParentName(parentName);
 		}
+		// 获取自定义标签的class,此时会调用自定义解析器
 		Class<?> beanClass = getBeanClass(element);
 		if (beanClass != null) {
 			builder.getRawBeanDefinition().setBeanClass(beanClass);
@@ -85,7 +86,7 @@ public abstract class AbstractSingleBeanDefinitionParser extends AbstractBeanDef
 			// Default-lazy-init applies to custom bean definitions as well.
 			builder.setLazyInit(true);
 		}
-		doParse(element, parserContext, builder);
+		doParse(element, parserContext, builder);// 进入自定义的Handler解析器
 		return builder.getBeanDefinition();
 	}
 

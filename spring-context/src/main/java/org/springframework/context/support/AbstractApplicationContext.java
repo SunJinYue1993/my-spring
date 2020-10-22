@@ -174,7 +174,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	static {
 		// Eagerly load the ContextClosedEvent class to avoid weird classloader issues
-		// on application shutdown in WebLogic 8.1. (Reported by Dustin Woods.)
+		// on application shutdown in WebLogic 8.1. (Reported by Dustin Woods.)为了解决in WebLogic 8.1的bug
 		ContextClosedEvent.class.getName();
 	}
 
@@ -185,7 +185,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	/** Unique id for this context, if any. */
 	private String id = ObjectUtils.identityToString(this);
 
-	/** Display name. */
+	/** Display(显示) name. */
 	private String displayName = ObjectUtils.identityToString(this);
 
 	/** Parent context. */
@@ -249,7 +249,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Create a new AbstractApplicationContext with no parent.
 	 */
 	public AbstractApplicationContext() {
-		// 获得资源解析器,其实就是解析xml配置文件的
+		// 1. 外初始化容器成员属性
+		// 2. 获得资源解析器,其实就是解析xml配置文件的;
 		this.resourcePatternResolver = getResourcePatternResolver();
 	}
 

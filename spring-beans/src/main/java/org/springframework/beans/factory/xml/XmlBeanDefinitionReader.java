@@ -547,7 +547,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	public NamespaceHandlerResolver getNamespaceHandlerResolver() {
 		if (this.namespaceHandlerResolver == null) {
-			this.namespaceHandlerResolver = createDefaultNamespaceHandlerResolver();
+			this.namespaceHandlerResolver = createDefaultNamespaceHandlerResolver();// 创建默认的命名空间处理解析器
 		}
 		return this.namespaceHandlerResolver;
 	}

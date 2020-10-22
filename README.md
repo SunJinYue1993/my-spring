@@ -12,8 +12,10 @@ so,以问题为驱动逐步学习Spring源码, 问题的解答以最直观的源
 4. day04: spring-framework框架环境搭建?
 5. day05: ClassPathXMLApplicationContext和AnnotationConfigApplicationContext的区别?
           注解驱动和xml配置BeanDefinition生成的时机?
-6. day06: BeanDefinition的解析？Spring有几个BeanDefinitionReader？单一职责！
-
+6. day06: BeanDefinition的解析？Spring有几个BeanDefinitionReader？
+7. day07: 从xml配置 -> BeanDefinition的过程？
+8. day08: 从注解配置 -> BeanDefinition的过程？
+9. day09: Spring顶层设计BeanFactory接口？
 
 
 

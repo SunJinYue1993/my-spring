@@ -145,9 +145,9 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			}
 		}
 
-		preProcessXml(root); // spring web可以扩展
+		preProcessXml(root); // spring web可以扩展 前置
 		parseBeanDefinitions(root, this.delegate);  //参数: 根节点, 解析器
-		postProcessXml(root); // spring web可以扩展
+		postProcessXml(root); // spring web可以扩展 后置
 
 		this.delegate = parent;
 	}

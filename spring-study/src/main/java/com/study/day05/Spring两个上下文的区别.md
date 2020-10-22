@@ -1,10 +1,12 @@
-### Spring两个上下文的区别?
+### Spring两个上下文
 
-#### 1. ClassPathXMLApplicationContext结构图
+#### 1. ClassPathXMLApplicationContext和AnnotationConfigApplicationContext
+
+- ClassPathXMLApplicationContext结构图
 
 ![](Spring两个上下文的区别.assets/1603198174(1).jpg)
 
-#### 2. AnnotationConfigApplicationContext结构图
+- AnnotationConfigApplicationContext结构图
 
 ![](Spring两个上下文的区别.assets/1603198195(1).jpg)
 
@@ -13,7 +15,7 @@
 - 相同点
 
   1. 在抽象层AbstractApplicationContext以上的功能是一样的
-  2. 公用refresh()提供的模板
+  2. 也就是说共用AbstractApplicationContext.refresh()提供的模板     - 模板方法模式
 
 - 不同点
 
@@ -23,9 +25,16 @@
 
      另一个是GenericApplicationContext实现的refreshBeanFactory(), 这就意味着BeanDefinition的生成有不同的实现.
 
-  2. ClassPathXMLApplicationContext通过AbstractRefreshableApplicationContext实现的refreshBeanFactory()生成BeanDefinition, 它是`通过refreshBeanFactory()解析xml生成的BeanDefinition`,没有register()注册方法
+  2. ClassPathXMLApplicationContext通过AbstractRefreshableApplicationContext实现的refreshBeanFactory()生成BeanDefinition, 它是`通过refreshBeanFactory()解析xml生成的BeanDefinition`,没有register(??)注册方法, 但有还是有注册概念，只是方法名字一样！
 
-  3. AnnotationConfigApplicationContext`通过ac.register()进行注册封装成BeanDefinition`
+     ```java
+     // 关键流程
+     int count = registerBeanDefinitions(doc, resource); //这个方法进行注册，xml被解析成doc
+     ....
+     BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry()); // ☆向ioc容器注册解析得到的beanDefinition的地方
+     ```
+  
+  3. AnnotationConfigApplicationContext`通过ac.register(???)进行注册封装成BeanDefinition`
 
 #### 3. 注解驱动和xml配置BeanDefinition生成的时机?
 
@@ -43,12 +52,12 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 }
 
 2. xml配置
-new ClassPathXmlApplicationContext("applicationContext.xml"); ->> refresh();方法
+  new ClassPathXmlApplicationContext("applicationContext.xml"); ->> refresh();方法
 
+```java
 refresh(){
-    obtainFreshBeanFactory().refreshBeanFactory().loadBeanDefinitions(beanFactory).loadBeanDefinitions(beanDefinitionReader).....
-    
-    解析资源成 Document 对象, Document -> 用Document写逻辑来封装成 BeanDefinition -> BeanDefinitionHolder -> put BeanDefinitionMap中
-    
-    结束....
+obtainFreshBeanFactory().refreshBeanFactory().loadBeanDefinitions(beanFactory).loadBeanDefinitions(beanDefinitionReader).....
+解析资源成 Document 对象, Document -> 用Document写逻辑来封装成 BeanDefinition -> BeanDefinitionHolder -> put BeanDefinitionMap中
+结束....
 }
+```

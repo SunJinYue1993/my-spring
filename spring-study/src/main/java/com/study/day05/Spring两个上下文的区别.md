@@ -1,6 +1,10 @@
 ### Spring两个上下文
 
-#### 1. ClassPathXMLApplicationContext和AnnotationConfigApplicationContext
+#### 1. 为什么会有各种各样的ApplicationContext上下文？
+
+
+
+#### 2. ClassPathXMLApplicationContext和AnnotationConfigApplicationContext
 
 - ClassPathXMLApplicationContext结构图
 
@@ -52,7 +56,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 }
 
 2. xml配置
-  new ClassPathXmlApplicationContext("applicationContext.xml"); ->> refresh();方法
+    new ClassPathXmlApplicationContext("applicationContext.xml"); ->> refresh();方法
 
 ```java
 refresh(){

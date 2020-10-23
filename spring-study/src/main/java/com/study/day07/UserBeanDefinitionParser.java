@@ -1,4 +1,4 @@
-package com.study.day07.selftag;
+package com.study.day07;
 
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;

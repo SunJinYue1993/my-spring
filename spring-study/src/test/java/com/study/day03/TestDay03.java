@@ -5,7 +5,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 public class TestDay03 {
 
-
 	@Test
 	public void test01(){
 		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext();

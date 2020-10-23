@@ -1,4 +1,4 @@
-package com.study.day07.selftag;
+package com.study.day07;
 
 public class User {
 
@@ -6,7 +6,7 @@ public class User {
     private String email;
     private String password;
 
-    public String getUsername() {
+	public String getUsername() {
         return username;
     }
 

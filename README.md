@@ -14,9 +14,9 @@ so,以问题为驱动逐步学习Spring源码, 问题的解答以最直观的源
 5. day05: 
 - 为什么会有各种各样的ApplicationContext上下文？
 - ClassPathXMLApplicationContext和AnnotationConfigApplicationContext的区别?
-- BeanFactory原料有何而来？(注解驱动和xml配置BeanDefinition生成的时机- BeanDefinitionNames 和 BeanDefinitionMap)
+- BeanFactory原料(BeanDefinition)由何而来？(注解驱动和xml配置BeanDefinition生成的时机- BeanDefinitionNames 和 BeanDefinitionMap)
 6. day06: Spring有几个BeanDefinitionReader, 干什么的？
-7. day07: 从xml配置 -> BeanDefinition的过程？
+7. day07: 从xml配置 -> BeanDefinition的过程？如何自定义xml标签扩展？
 8. day08: 从注解配置 -> BeanDefinition的过程？
 9. day09: Spring顶层设计BeanFactory接口？
 10. day10: BeanFactory的各个子接口作用？ 

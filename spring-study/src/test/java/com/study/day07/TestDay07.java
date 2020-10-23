@@ -1,8 +1,6 @@
 package com.study.day07;
 
-import com.study.day02.config.HteEntity;
 import org.junit.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -12,9 +10,12 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class TestDay07 {
 
 	@Test
-	public void test01(){
+	public void test01() {
 		ClassPathXmlApplicationContext xmlAC = new ClassPathXmlApplicationContext("applicationContext.xml");
-		System.out.println(xmlAC.getBean("person"));
+		User msb = (User) xmlAC.getBean("msb");
+		System.out.println(msb.getEmail());
+
+		System.out.println(xmlAC.getBean(User.class).getEmail());
 	}
 
 }

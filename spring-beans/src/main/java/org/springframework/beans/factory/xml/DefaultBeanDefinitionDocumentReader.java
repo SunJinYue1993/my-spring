@@ -176,7 +176,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 						parseDefaultElement(ele, delegate);// 解析spring的命名空间,比如beans,bean标签
 					}
 					else {
-						delegate.parseCustomElement(ele);// ☆解析其他命名空间标签,比如我们可以扩展自己定义的标签
+						delegate.parseCustomElement(ele);// ☆解析其他命名空间标签,比如我们可以扩展自己定义的标签<msb:user>
 					}
 				}
 			}

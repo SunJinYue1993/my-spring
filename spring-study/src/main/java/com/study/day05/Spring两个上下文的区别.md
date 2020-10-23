@@ -40,40 +40,45 @@
 
 1. 注解配置
 
-  ```java
-  new AnnotationConfigApplicationContext().register(HteEntity.class);
-  // 两个核心的解析类
-  public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry {
-  // 通过解析各种注解注册(比如@Component) -> BeanDefinition
-  private final AnnotatedBeanDefinitionReader reader;
-  // 通过扫描包批量注册(比如：@ComponentScan) -> BeanDefinition
-  private final ClassPathBeanDefinitionScanner scanner;
-  
-  this.reader.register(componentClasses);
-  registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());//注册完成
-  }
-  ```
-
-  
+   ```java
+   new AnnotationConfigApplicationContext().register(HteEntity.class);
+   // 两个核心的解析类
+   public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry {
+       // 通过解析各种注解注册(比如@Component) -> BeanDefinition
+       private final AnnotatedBeanDefinitionReader reader;
+       // 通过扫描包批量注册(比如：@ComponentScan) -> BeanDefinition
+       private final ClassPathBeanDefinitionScanner scanner;
+   
+       this.reader.register(componentClasses);
+       registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());//注册完成
+   }
+   ```
 
 2. xml配置
 
-    ```java
-    new ClassPathXmlApplicationContext("applicationContext.xml"); ->> refresh();方法
-    // debug流程
-    obtainFreshBeanFactory();
-    refreshBeanFactory();
-    loadBeanDefinitions(beanFactory); 
-    loadBeanDefinitions(beanDefinitionReader);
-    reader.loadBeanDefinitions(configLocations);
-    count += loadBeanDefinitions(location);
-    doLoadBeanDefinitions(inputSource, encodedResource.getResource());
-    int count = registerBeanDefinitions(doc, resource);
-    documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
-    parseBeanDefinitions(root, this.delegate);  // ☆ 参数: 根节点, 解析器
-    	1. parseDefaultElement(ele, delegate);// 解析spring的命名空间,比如beans,bean标签
-    	2. delegate.parseCustomElement(ele);// ☆解析其他命名空间标签,比如我们可以扩展自己定义的标签
-    ```
+   ```java
+   new ClassPathXmlApplicationContext("applicationContext.xml"); ->> refresh();方法
+   // debug流程
+   obtainFreshBeanFactory();
+   refreshBeanFactory();
+   loadBeanDefinitions(beanFactory); 
+   loadBeanDefinitions(beanDefinitionReader);
+   reader.loadBeanDefinitions(configLocations);
+   count += loadBeanDefinitions(location);
+   doLoadBeanDefinitions(inputSource, encodedResource.getResource());
+   int count = registerBeanDefinitions(doc, resource);
+   documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
+   parseBeanDefinitions(root, this.delegate);  // ☆ 参数: 根节点, 解析器
+   	1. parseDefaultElement(ele, delegate);// 解析spring的命名空间,比如beans,bean标签
+   	2. delegate.parseCustomElement(ele);// ☆解析其他命名空间标签,比如我们可以扩展自己定义的标签
+   		handler.parse(ele, new ParserContext(this.readerContext, this, containingBd));
+   		AbstractBeanDefinition definition = parseInternal(element, parserContext);
+   		// 构造一个GenericBeanDefinition; new BeanDefinitionBuilder(new GenericBeanDefinition());
+   		BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition();
+   		doParse(element, parserContext, builder);// 进入自定义的Handler解析器，多态
+   ```
+
+   
 
 3. 总结
 

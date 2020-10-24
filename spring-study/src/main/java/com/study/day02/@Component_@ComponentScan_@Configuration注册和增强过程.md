@@ -1,5 +1,18 @@
-## @Component注入IOC的流程
-### 算法与数据结构
+## @Component/@ComponentScan/@Configuration注册和增强过程
+### 1. 注册
+
+```java
+// 1.new 一个注解BeanDefinition的读取器
+new AnnotatedBeanDefinitionReader(this);
+// 2.AnnotationConfigUtils注册一些处理注解(比如:@Autowired，@Value...)的beanFactoryPostProcessor和beanPostProcessor
+AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
+// 3.注册我们配置的类(比如@Component修饰的类)
+AnnotationConfigApplicationContext().register(xx.class);
+BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
+```
+
+### 2. 增强
+
 #### 1. AbstractApplicationContext
 ```java
 	// 调用上下文中 注册为bean的工厂处理器(例如: MyBeanFactoryPostProcessor, ConfigurationClassPostProcessor)

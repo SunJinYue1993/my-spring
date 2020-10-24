@@ -1,4 +1,4 @@
-## 配置的Bean如何放入到IOC中
+## @Component注入IOC的流程
 ### 算法与数据结构
 #### 1. AbstractApplicationContext
 ```java

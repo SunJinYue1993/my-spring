@@ -21,7 +21,8 @@ public class TestDay02 {
 	@Test
 	public void test01() {
 		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext();
-		ac.register(HteEntity.class);
+		ac.register(TheConfig.class);
+//		ac.register(HteEntity.class);
 		ac.refresh();
 		System.out.println(ac.getBean(HteEntity.class));
 	}

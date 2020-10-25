@@ -1,17 +1,38 @@
 ## @Component/@ComponentScan/@Configuration注册和增强过程
-### 1. 注册
+### 1. 概括
+
+```markdown
+## 核心点
+- xml配置或annotation配置封装BeanDefinition是两个流程,需要分开说
+## 如何将组件加入IOC?
+### 1. 在类上加@Component注解@Controller注解等等注解,这是怎样一个流程?
+	首先需要register(xxx.class)进行注册,那么就会生成这个xxx.class的BeanDefinition了,需要注意的是这个方法是AnnotationConfigApplicationContext对象.
+### 2. 那有一千了类,岂不是要register(xxx.class)1000次?
+	其实不然,当一个类转化成BeanDefinition时,我们可以对BeanDefinition进行增强,这是一个Bean需要经历的生命周期,解析这个xxx类时,解析到他由@ComponentScan修饰时,会自动扫描,把扫描到的类也生成BeanDefinition;有个ConfigurationClassPostProcessor类就干这个是,具体逻辑在ComponentScanAnnotationParser类中!
+	所以,被扫描到的类BeanDefinition生成在invokeBeanFactoryPostProcessors(beanFactory);这个增强期
+### 3. spring自带的BeanDefinition?
+	当加了@Component等注解修饰的类生成BeanDefinition时,spring会自动生成一些自带的BeanDefinition来对这个类进行处理,详情转day13.
+beanFactory类的beanDefinitionMap属性
+RootBeanDefinition:
+1. org.springframework.context.annotation.internalConfigurationAnnotationProcessor
+2. org.springframework.context.event.internalEventListenerFactory
+3. org.springframework.context.event.internalEventListenerProcessor
+4. org.springframework.context.annotation.internalAutowiredAnnotationProcessor
+```
+
+### 2. 注册
 
 ```java
 // 1.new 一个注解BeanDefinition的读取器
 new AnnotatedBeanDefinitionReader(this);
 // 2.AnnotationConfigUtils注册一些处理注解(比如:@Autowired，@Value...)的beanFactoryPostProcessor和beanPostProcessor
 AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
-// 3.注册我们配置的类(比如@Component修饰的类)
+// 3.注册我们配置的类(比如@Configuration修饰的类)
 AnnotationConfigApplicationContext().register(xx.class);
 BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
 ```
 
-### 2. 增强
+### 3. 增强
 
 #### 1. AbstractApplicationContext
 ```java

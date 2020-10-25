@@ -575,7 +575,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				StartupStep beanPostProcess = this.applicationStartup.start("spring.context.beans.post-process");
 				// 5. Invoke factory processors registered as beans in the context.
-				// 调用各种beanFactory处理器
+				// 调用各种beanFactory处理器, beanFactory和BeanDefinition进行增强扩展
 				// --按给定顺序( 如:@Order(1) )实例化并调用所有的BeanFactoryPostProcessor; (例如: MyBeanFactoryPostProcessor, XxxBeanFactoryPostProcessor)
 				invokeBeanFactoryPostProcessors(beanFactory);
 
@@ -784,6 +784,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * TODO: 按给定顺序( 如:@Order(1) )实例化并调用所有的BeanFactoryPostProcessor; 必须在单例实例化之前调用
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
+		// 获取到当前应用程序上下文的beanFactoryPostProcessors变量的值，并且实例化调用执行所有已经注册的beanFactoryPostProcessor
+		// 默认情况下，通过getBeanFactoryPostProcessors()来获取已经注册的BeanFactoryPostProcessor，但是默认是空的，那么问题来了，如果你想扩展，怎么进行扩展工作？
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime

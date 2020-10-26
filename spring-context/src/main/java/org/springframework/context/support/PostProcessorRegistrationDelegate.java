@@ -69,8 +69,8 @@ final class PostProcessorRegistrationDelegate {
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
 			// TODO: 注意两个接口是不同的，BeanDefinitionRegistryPostProcessor是BeanFactoryPostProcessor的子集
 			// BeanFactoryPostProcessor主要针对的操作对象是BeanFactory，而BeanDefinitionRegistryPostProcessor主要针对的操作对象是BeanDefinition
-			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>(); // 存放BeanFactoryPostProcessor的集合
-			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>(); // 存放BeanDefinitionRegistryPostProcessor的集合
+			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>(); // 存放BeanFactoryPostProcessor的集合(父类)
+			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>(); // 存放BeanDefinitionRegistryPostProcessor的集合(子类)
 
 			// 首先处理入参中的beanFactoryPostProcessors,遍历所有的beanFactoryPostProcessors，将BeanDefinitionRegistryPostProcessor
 			// 和BeanFactoryPostProcessor区分开, 先处理子集

@@ -558,7 +558,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			// 前戏(这词用得好): 为容器刷新前的准备工作: 6 个步骤, 里面有注释
 			prepareRefresh();
 
-			// 2. Tell the subclass to refresh the internal bean factory.  翻译: 告诉子类刷新内部bean factory
+			// 2. Tell the subclass to refresh the internal bean factory.  -- 告诉子类刷新内部bean factory
 			// 创建容器对象：DefaultListableBeanFactory
 			// 加载xml配置文件的属性值到当前工厂中，最重要的就是BeanDefinition得生成
 			// TODO: 基于annotation开发，配置属性不在这里!, 详情看day02和day05，BeanDefinition是register()的reader和scanner完成的

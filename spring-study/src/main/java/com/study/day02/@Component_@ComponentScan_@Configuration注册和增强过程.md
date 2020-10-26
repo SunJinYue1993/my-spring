@@ -54,6 +54,11 @@ BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry
 ```
 #### 3. ConfigurationClassPostProcessor
 处理我们配置类，也就是加了@Configuration注解的处理类
+ * 此类是一个后置处理器的类，主要功能是参与BeanFactory的建造，主要功能如下
+ *   1、解析加了@Configuration的配置类
+ *   2、解析@ComponentScan扫描的包
+ *   3、解析@ComponentScans扫描的包
+ *   4、解析@Import注解
 ```java
 	// 根据BeanDefinitionRegistry构建并验证配置模型
 	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {

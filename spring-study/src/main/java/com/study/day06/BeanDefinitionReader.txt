@@ -1,7 +1,7 @@
-XmlBeanDefinitionReader：用于解析并封装xml -> BeanDefinition
-
-BeanDefinitionReader接口
-
-AbstractBeanDefinitionReader抽象类 -》XmlBeanDefinitionReader和GroovyBeanDefinitionReader，
+AbstractBeanDefinitionReader抽象类
+    XmlBeanDefinitionReader
+    GroovyBeanDefinitionReader
 
 BeanDefinitionDocumentReader  解析Document对象 封装成  BeanDefinition
+
+太多太杂,没啥总结意义

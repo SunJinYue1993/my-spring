@@ -1,0 +1,1 @@
+AnnotatedGenericBeanDefinition  -> 基于注解的bean原料, 注解上下文用到的

@@ -1,7 +1,15 @@
+##
+总之,XxxReader是配置与BeanDefinition原料之间的一层抽象
+----XML----
 AbstractBeanDefinitionReader抽象类
-    XmlBeanDefinitionReader
+    XmlBeanDefinitionReader{
+        BeanDefinitionDocumentReader  解析Document对象 封装成  BeanDefinition
+    }
     GroovyBeanDefinitionReader
 
-BeanDefinitionDocumentReader  解析Document对象 封装成  BeanDefinition
 
-太多太杂,没啥总结意义
+----注解----
+AnnotatedBeanDefinitionReader   -> new BeanDefinitionHolder -> put到Map中 -> 这个就是注解配置最开始的原料,然后ConfigurationClassPostProcesses会处理这个原料
+ClassPathBeanDefinitionScanner  -> doScan <需要注意的是扫描包会把所有的类都扫进去,只不过要让如IOC的是哪些加个组件注释(比如@Component)的类,其他的会被淘汰掉>;其实我们在这里可以干很多事情
+
+太多太杂,看到就会补充

@@ -31,4 +31,16 @@ public class TestDay08 {
         System.out.println("debug02() over...");
     }
 
+	@Test
+	public void debug03() {
+		// springboot核心思想,基于starter来自动配置应用
+		// springboot底层也是用spring框架的ConfigurationClassPostProcessor这个类进行扩展，来实现自动配置，核心在@Import注解
+		// 基本步骤：获得启动类上的注解，由于注解的继承，ConfigurationClassPostProcessor会递归处理所有的注解，直到解析@Import
+		// 反射实例化@Import的类，这个类将获得所有自动配置的配置类，通过starter进行一次过滤，那么这些剩下的类就是自动配置类。
+		AnnotationConfigApplicationContext annotation = new AnnotationConfigApplicationContext(ColorConfig.class);
+		Green green = annotation.getBean(Green.class);
+		System.out.println("bean = " + green);
+		System.out.println("debug03() over...");
+	}
+
 }
